@@ -1,20 +1,17 @@
 package BookShopBll;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import BookShopService.BookService;
 import Models.BookModel;
@@ -23,11 +20,12 @@ import Models.PageModel;
 /**
  * Servlet implementation class BookServlet
  */
-@WebServlet("/get_books")
-public class BookServlet implements Controller {
-
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+@Controller
+@RequestMapping("/book")
+public class BookServlet {
+	
+	@RequestMapping("/getBookList.do")
+	public void getList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession se = request.getSession();
 		response.setContentType("utf-8");
 		String pageIndex = request.getParameter("page");
@@ -47,14 +45,10 @@ public class BookServlet implements Controller {
 		}
 		String str = sb.toString().substring(0, sb.toString().length() - 1) + "]}";
 
-		PrintWriter out = response.getWriter();
-		out.print(str);
-		out.flush();
-		out.close();
-		
-		return null;
+		PrintWriter writer = response.getWriter();
+		writer.println(str);
+		writer.flush();
+		writer.close();
 	}
-	
-	
 
 }
