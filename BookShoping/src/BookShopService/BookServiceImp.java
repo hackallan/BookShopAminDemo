@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import BookShopDal.BookDao;
+import Mapper.BookServiceMapper;
 import Models.BookModel;
 import Models.PageModel;
 
@@ -13,11 +14,11 @@ import Models.PageModel;
 public class BookServiceImp implements BookService {
 
 	@Autowired
-	private BookDao dao;
+	private BookServiceMapper mapper;
 
 	@Override
 	public List<BookModel> getList(PageModel page) {
-		return dao.getList(page);
+		return mapper.getList(page);
 	}
 
 	@Override
@@ -34,8 +35,7 @@ public class BookServiceImp implements BookService {
 
 	@Override
 	public boolean add(BookModel m) {
-		// TODO Auto-generated method stub
-		return false;
+		return mapper.add(m);
 	}
 
 }

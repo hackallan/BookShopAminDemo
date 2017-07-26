@@ -1,0 +1,148 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Basic CRUD Application - jQuery EasyUI CRUD Demo</title>
+<link rel="stylesheet" type="text/css"
+	href="../jquery-easyui-1.5/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../jquery-easyui-1.5/themes/icon.css">
+<link rel="stylesheet" type="text/css"
+	href="../jquery-easyui-1.5/demo/demo.css">
+<script type="text/javascript" src="../jquery-easyui-1.5/jquery.min.js"></script>
+<script type="text/javascript"
+	src="../jquery-easyui-1.5/jquery.easyui.min.js"></script>
+</head>
+<body>
+
+	<table id="dg" title="My Books" class="easyui-datagrid"
+		style="width: 800px; height: 500px" url="getBookList.do"
+		toolbar="#toolbar" pagination="true" rownumbers="true"
+		fitColumns="true" data-options="pageSize:10,pageList:[10,20,30]"
+		singleSelect="true">
+		<thead>
+			<tr>
+				<th field="id" width="50">书编号</th>
+				<th field="name" width="50">书名</th>
+				<th field="typeName" width="50">书类型</th>
+				<th field="author" width="50">作者</th>
+				<th field="pubDate" width="50">发布时间</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="toolbar">
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-add" plain="true" onclick="newUser()">添加</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-edit" plain="true" onclick="editUser()">修改</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-remove" plain="true" onclick="destroyUser()">删除</a>
+	</div>
+
+	<div id="dlg" class="easyui-dialog" style="width: 400px" closed="true"
+		buttons="#dlg-buttons">
+		<form id="fm" method="post" novalidate
+			style="margin: 0; padding: 20px 50px">
+			<div
+				style="margin-bottom: 20px; font-size: 14px; border-bottom: 1px solid #ccc">Book
+				Information</div>
+			<div style="margin-bottom: 10px">
+				<input name="name" class="easyui-textbox" required="true"
+					label="图书名称:" style="width: 100%">
+			</div>
+			<div style="margin-bottom: 10px">
+				<input name="typeName" class="easyui-textbox" required="true"
+					label="图书类型:" style="width: 100%">
+			</div>
+			<div style="margin-bottom: 10px">
+				<input name="typeId" class="easyui-textbox" required="true"
+					label="图书类型编号:" style="width: 100%">
+			</div>
+			<div style="margin-bottom: 10px">
+				<input name="author" class="easyui-textbox" required="true"
+					label="作者:" style="width: 100%">
+			</div>
+		</form>
+	</div>
+	<div id="dlg-buttons">
+		<a href="javascript:void(0)" class="easyui-linkbutton c6"
+			iconCls="icon-ok" onclick="saveUser()" style="width: 90px">Save</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
+			style="width: 90px">Cancel</a>
+	</div>
+	<script type="text/javascript">
+		var url;
+		function newUser() {
+			$('#dlg').dialog('open').dialog('center').dialog('setTitle',
+					'New Book');
+			$('#fm').form('clear');
+			url = 'save_user.do';
+		}
+
+		function editUser() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row) {
+				$('#dlg').dialog('open').dialog('center').dialog('setTitle',
+						'Edit Book');
+				$('#fm').form('load', row);
+				url = 'update_book?id=' + row.id;
+			}
+		}
+
+		function saveUser() {
+			$('#fm').form('submit', {
+				url : url,
+				onSubmit : function() {
+					return $(this).form('validate');
+				},
+				success : function(result) {
+					var result = eval('(' + result + ')');
+					if (result.errorMsg) {
+						$.messager.show({
+							title : 'Error',
+							msg : result.errorMsg
+						});
+					} else {
+						$.messager.show({
+							title : 'Success',
+							msg : result.successMsg
+						});
+						$('#dlg').dialog('close'); // close the dialog
+						$('#dg').datagrid('reload'); // reload the user data
+					}
+				}
+			});
+		}
+		function destroyUser() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row) {
+				$.messager.confirm('Confirm',
+						'Are you sure you want to destroy this user?',
+						function(r) {
+							if (r) {
+								$.post('destroy_user', {
+									id : row.id
+								}, function(result) {
+									if (result.success) {
+										$.messager.show({ // show error message
+											title : 'Success',
+											msg : result.success
+										});
+										$('#dg').datagrid('reload'); // reload the user data
+									} else {
+										$.messager.show({ // show error message
+											title : 'Error',
+											msg : result.errorMsg
+										});
+									}
+								}, 'json');
+							}
+						});
+			}
+		}
+	</script>
+</body>
+</html>

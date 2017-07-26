@@ -1,18 +1,19 @@
 package BookShopBll;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
+import BookShopDal.BookDal;
 import BookShopService.BookService;
 import Models.BookModel;
 import Models.PageModel;
@@ -21,9 +22,16 @@ import Models.PageModel;
  * Servlet implementation class BookServlet
  */
 @Controller
-@RequestMapping("/book")
+@RequestMapping("book")
 public class BookServlet {
-	
+	@Autowired
+	private BookService service;
+
+	@RequestMapping("list.do")
+	public String list() {
+		return "BookList";
+	}
+
 	@RequestMapping("/getBookList.do")
 	public void getList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession se = request.getSession();
@@ -34,9 +42,7 @@ public class BookServlet {
 		PageModel pageModel = new PageModel();
 		pageModel.setLimit(Integer.parseInt(pageSize));
 		pageModel.setPageIndex((Integer.parseInt(pageIndex) - 1) * pageModel.getLimit());
-		ApplicationContext ac = new ClassPathXmlApplicationContext("springContext.xml");
-		BookService bs = ac.getBean("bookService", BookService.class);
-		List<BookModel> list = bs.getList(pageModel);
+		List<BookModel> list = service.getList(pageModel);
 		StringBuilder sb = new StringBuilder();
 		sb.append("{\"total\":" + 11 + ",\"rows\":[");
 		for (BookModel m : list) {
@@ -51,4 +57,29 @@ public class BookServlet {
 		writer.close();
 	}
 
+	@RequestMapping("save_user.do")
+	public void save_user(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
+		BookModel m = new BookModel();
+		String bookName = request.getParameter("name");
+		String typeName = request.getParameter("typeName");
+		String typeId = request.getParameter("typeId");
+		String author = request.getParameter("author");
+		m.setAuthor(author);
+		m.setName(bookName);
+		m.setTypeName(typeName);
+		m.setTypeId(Integer.parseInt(typeId));
+		boolean b = service.add(m);
+		PrintWriter ps = response.getWriter();
+		// title:'Success',msg:result.successMsg}
+
+		String str = "{\"title\":\"Error\",\"errorMsg\":\"添加失败\"}";
+		if (b) {
+			str = "{\"title\":\"Success\",\"successMsg\":\"添加成功\"}";
+		}
+		ps.write(str);
+		ps.flush();
+		ps.close();
+	}
 }

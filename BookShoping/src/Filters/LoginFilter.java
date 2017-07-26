@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Servlet Filter implementation class LoginFilter
  */
-@WebFilter("/*")
+@WebFilter("/Filters/*")
 public class LoginFilter implements Filter {
 
 	/**
@@ -36,7 +36,7 @@ public class LoginFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		String uri = req.getRequestURI();
-		if (uri.endsWith("login") || uri.endsWith("login.jsp")||uri.endsWith("loginuser")) {
+		if (uri.endsWith("login") || uri.endsWith("login.jsp") || uri.endsWith("loginuser")) {
 			chain.doFilter(request, response);
 			return;
 		}

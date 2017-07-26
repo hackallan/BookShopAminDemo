@@ -1,8 +1,9 @@
 package Models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BookModel {
+public class BookModel implements Serializable{
 
 	private int id;
 

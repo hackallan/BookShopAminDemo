@@ -1,6 +1,8 @@
 package Models;
 
-public class PageModel {
+import java.io.Serializable;
+
+public class PageModel implements Serializable{
 
 	private int pageIndex;
 	private int limit;

@@ -11,6 +11,4 @@
 	<bean id="proxy" class="Models.ProxyHandler" factory-method="getInstance">
 		<constructor-arg ref="bookDao"></constructor-arg>
 	</bean>
-
-
 </beans>

@@ -5,22 +5,9 @@
 
 <configuration>
 
-	<properties resource="jdbc.properties"></properties>
+	<!-- <properties resource="jdbc.properties"></properties> -->
 	<typeAliases>
 		<package name="Models" />
 	</typeAliases>
-	<environments default="deve">
-		<environment id="deve">
-			<transactionManager type="JDBC"></transactionManager>
-			<dataSource type="POOLED">
-				<property name="driver" value="${jdbc.driver}" />
-				<property name="url" value="${jdbc.url}" />
-				<property name="username" value="${jdbc.username}" />
-				<property name="password" value="${jdbc.password}" />
-			</dataSource>
-		</environment>
-	</environments>
-	<mappers>
-		<mapper resource="BookShopBll/bookServiceMapper.xml" />
-	</mappers>
+	
 </configuration>

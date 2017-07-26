@@ -9,6 +9,8 @@
 	<configs>
 		<config>SpringConfig/springContext.xml</config>
 		<config>SpringConfig/springmvc-servlet.xml</config>
+		<config>SpringConfig/applicationContext-dao.xml</config>
+		<config>SpringConfig/applicationContext-transaction.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>
